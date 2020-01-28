@@ -1,0 +1,213 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:padding="20dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:id="@+id/profile_photo"
+                android:layout_marginTop="20dp"
+                app:civ_border_color="@color/black"
+                app:civ_border_width="2dp"
+                android:layout_centerHorizontal="true"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Change Photo"
+                android:id="@+id/changeProfilePhoto"
+                android:layout_below="@id/profile_photo"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/blue"
+                android:textSize="16sp"/>
+
+
+<!--            User Name Section-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/changeProfilePhoto"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/grey_border_bottom"
+                android:id="@+id/relativeLayout1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Name"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:id="@+id/username"
+                    android:textColor="@color/black"
+                    android:background="@null"
+                    android:inputType="textNoSuggestions"
+                    android:hint="name"/>
+
+            </LinearLayout>
+
+<!--            Display Name Section-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/relativeLayout1"
+                android:background="@drawable/grey_border_bottom"
+                android:id="@+id/relativeLayout2"
+                android:orientation="vertical"
+                android:layout_marginTop="8dp">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Username"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:id="@+id/display_name"
+                    android:textColor="@color/black"
+                    android:background="@null"
+                    android:inputType="textNoSuggestions"
+                    android:hint="display name"/>
+
+            </LinearLayout>
+
+<!--            Website Section-->
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/relativeLayout2"
+                android:background="@drawable/grey_border_bottom"
+                android:id="@+id/relativeLayout3"
+                android:layout_marginTop="8dp"
+                >
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Webiste"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/website"
+                    android:background="@null"
+                    android:textColor="@color/black"
+                    android:inputType="textNoSuggestions"
+                    android:hint="website"/>
+
+            </LinearLayout>
+
+<!--            Description Section-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/relativeLayout3"
+                android:background="@drawable/grey_border_bottom"
+                android:id="@+id/relativeLayout4"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Description"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/description"
+                    android:background="@null"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/black"
+                    android:inputType="textNoSuggestions"
+                    android:hint="description"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:text="Profile Information"
+                android:layout_below="@id/relativeLayout4"
+                android:layout_marginTop="15dp"
+                android:textColor="@color/black"
+                android:id="@+id/textPrivateInformation"/>
+
+
+<!--            Mail Section-->
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textPrivateInformation"
+                android:background="@drawable/grey_border_bottom"
+                android:id="@+id/relativeLayout5"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Email Address"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/mail"
+                    android:background="@null"
+                    android:textColor="@color/black"
+                    android:inputType="textNoSuggestions"
+                    android:hint="mail"/>
+
+            </LinearLayout>
+
+
+            <!--            Phone Number Section-->
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/relativeLayout5"
+                android:background="@drawable/grey_border_bottom"
+                android:id="@+id/relativeLayout6"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Phone number"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/black"
+                    android:id="@+id/phoneNumber"
+                    android:background="@null"
+                    android:inputType="textNoSuggestions"
+                    android:hint="phone number"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</merge>
