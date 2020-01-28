@@ -5,11 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.instagramclone.Login.LoginActivity;
 import com.example.instagramclone.R;
 import com.example.instagramclone.Utils.BottomNavigationViewHelper;
 import com.example.instagramclone.Utils.SectionsPagerAdapter;
@@ -90,6 +92,20 @@ public class MainActivity extends AppCompatActivity {
     /**
      * ********************************** firebase ************************************************
      */
+
+    /**
+     *  Check to see if the @param user is logged in
+     * @param user
+     */
+    private void checkCurrentUser(FirebaseUser user){
+        Log.d(TAG, "checkCurrentUser: checking if user is logged in");
+
+        if(user == null){
+            Intent intent = new Intent(mContext , LoginActivity.class);
+            startActivity(intent);
+//            finish();
+        }
+    }
     /**
      * Setup the firebase auth
      */
@@ -100,6 +116,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
+
+                //  Check if the current user is logged in
+                checkCurrentUser(user);
+
+
                 if(user != null){
                     //  User is signed in
                     Log.d(TAG, "onAuthStateChanged: signed_in:" + user.getUid());
@@ -115,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
+//        checkCurrentUser(mAuth.getCurrentUser());
     }
 
     @Override
