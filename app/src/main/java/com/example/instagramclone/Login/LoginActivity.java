@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.instagramclone.Home.MainActivity;
 import com.example.instagramclone.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -65,6 +66,17 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    private void userSuccessfull(){
+         /*
+            If user is logged in navigate to Main Activity
+         */
+        if(mAuth.getCurrentUser() != null){
+            Intent intent = new Intent(LoginActivity.this , MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
+
     /**
      * ********************************** firebase ************************************************
      */
@@ -98,6 +110,7 @@ public class LoginActivity extends AppCompatActivity {
                                         Log.d(TAG, "signInWithEmail:success login");
                                         Toast.makeText(mContext , "Authentication Successfull" , Toast.LENGTH_SHORT).show();
                                         FirebaseUser user = mAuth.getCurrentUser();
+                                        userSuccessfull();
 //                                        updateUI(user);
                                     } else {
                                         // If sign in fails, display a message to the user.
@@ -118,6 +131,18 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+
+        TextView linkSignUp = findViewById(R.id.link_signup);
+
+        linkSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: navigating to Register Activity");
+                Intent intent = new Intent(LoginActivity.this , RegisterActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     /**
