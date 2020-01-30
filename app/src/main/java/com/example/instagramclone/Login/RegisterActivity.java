@@ -18,6 +18,11 @@ import com.example.instagramclone.R;
 import com.example.instagramclone.Utils.FirebaseMethods;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -30,6 +35,9 @@ public class RegisterActivity extends AppCompatActivity {
     private Button btnRegister;
     private ProgressBar mProgressBar;
     private FirebaseMethods firebaseMethods;
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference myRef;
+    private String append = "";
 
     //  firebase
     private FirebaseAuth mAuth;
@@ -40,10 +48,11 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         Log.d(TAG, "onCreate: started");
+        mContext = RegisterActivity.this;
+        firebaseMethods = new FirebaseMethods(mContext);
 
         initWidgets();
         setupFirebaseAuth();
-        firebaseMethods = new FirebaseMethods(mContext);
         init();
     }
 
@@ -114,10 +123,14 @@ public class RegisterActivity extends AppCompatActivity {
     private void setupFirebaseAuth(){
         Log.d(TAG, "setupFirebaseAuth: setting up firebase Auth");
         mAuth = FirebaseAuth.getInstance();
+
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        myRef = mFirebaseDatabase.getReference();
+
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
+                final FirebaseUser user = firebaseAuth.getCurrentUser();
 
                 //  Check if the current user is logged in
 //                checkCurrentUser(user);
@@ -126,6 +139,30 @@ public class RegisterActivity extends AppCompatActivity {
                 if(user != null){
                     //  User is signed in
                     Log.d(TAG, "onAuthStateChanged: signed_in:" + user.getUid());
+
+                    myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            //  First Check username is already not in use
+                            if(firebaseMethods.checkIfUsernameExists(username , dataSnapshot)){
+                                append = myRef.push().getKey().substring(3,10);
+                                Log.d(TAG, "onDataChange: username already exists appending random string to name " + append);
+                            }
+
+                            username = username + append;
+
+                            //  Add new user to database
+                            firebaseMethods.addNewUser(email , username , "" , "" , "");
+
+                            Toast.makeText(mContext , "Signup successfull. Sending Verification email.",Toast.LENGTH_SHORT).show();
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                 } else{
                     //  User is signed out
                     Log.d(TAG, "onAuthStateChanged: signed_out ");
