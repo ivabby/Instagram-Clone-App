@@ -2,6 +2,7 @@ package com.example.instagramclone.Home;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
@@ -145,5 +146,12 @@ public class MainActivity extends AppCompatActivity {
         if(mAuth != null){
             mAuth.removeAuthStateListener(mAuthListener);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        ActivityCompat.finishAffinity(MainActivity.this);
+        android.os.Process.killProcess(android.os.Process.myPid());
     }
 }
