@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         if(user == null){
             Intent intent = new Intent(mContext , LoginActivity.class);
             startActivity(intent);
-            finish();
+            ActivityCompat.finishAffinity(MainActivity.this);
         }
     }
     /**
@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        ActivityCompat.finishAffinity(MainActivity.this);
-        android.os.Process.killProcess(android.os.Process.myPid());
+//        ActivityCompat.finishAffinity(MainActivity.this);
+//        android.os.Process.killProcess(android.os.Process.myPid());
     }
 }

@@ -55,10 +55,10 @@ public class SignOutFragment extends Fragment {
                 tvSigningout.setVisibility(View.VISIBLE);
 
                 mAuth.signOut();
-                Intent intent = new Intent(getActivity() , LoginActivity.class);
+//                Intent intent = new Intent(getActivity() , LoginActivity.class);
 //                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                ActivityCompat.finishAffinity(getActivity());
+//                startActivity(intent);
+//                ActivityCompat.finishAffinity(getActivity());
                 getActivity().finish();
             }
         });
@@ -96,6 +96,7 @@ public class SignOutFragment extends Fragment {
 
                     Log.d(TAG, "onAuthStateChanged: navigating to login screen");
                     Intent intent = new Intent(getActivity() , LoginActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
 
                 }
@@ -103,20 +104,20 @@ public class SignOutFragment extends Fragment {
         };
     }
 
-    /*
+
     @Override
-    protected void onStart() {
+    public void onStart() {
         super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
+        mAuth.addAuthStateListener(mAuthStateListener);
 //        checkCurrentUser(mAuth.getCurrentUser());
     }
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
         if(mAuth != null){
-            mAuth.removeAuthStateListener(mAuthListener);
+            mAuth.removeAuthStateListener(mAuthStateListener);
         }
     }
-    */
+
 }
