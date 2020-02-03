@@ -2,6 +2,7 @@
     <string name="app_name">Instagram Clone</string>
     <string name="edit_profile_fragment">Edit Profile</string>
     <string name="sign_out_fragment">Sign Out</string>
+    <string name="profile_fragment">Profile Fragment</string>
 
     <!--firebase database fields-->
     <string name="dbname_users">users</string>
