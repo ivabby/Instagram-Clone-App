@@ -4,22 +4,28 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/relativeLayout1">
+        android:id="@+id/relativeLayout">
 
-        <include layout="@layout/snippet_top_profilebar"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/relativeLayout1">
 
-    </RelativeLayout>
+            <include layout="@layout/snippet_top_profilebar"/>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/relativeLayout2"
-        android:layout_below="@id/relativeLayout1">
+        </RelativeLayout>
 
-        <include layout="@layout/layout_center_profile"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/relativeLayout2"
+            android:layout_below="@id/relativeLayout1">
 
+            <include layout="@layout/layout_center_profile"/>
+
+        </RelativeLayout>
     </RelativeLayout>
 
     <ProgressBar
