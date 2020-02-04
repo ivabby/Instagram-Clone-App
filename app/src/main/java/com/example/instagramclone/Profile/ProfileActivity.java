@@ -59,7 +59,13 @@ public class ProfileActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-//    private void tempGridSetup(){
+    @Override
+    public void onBackPressed() {
+        finish();
+        super.onBackPressed();
+    }
+
+    //    private void tempGridSetup(){
 //        ArrayList<String> imgURLs = new ArrayList<>();
 //        imgURLs.add("https://pbs.twimg.com/profile_images/616076655547682816/6gMRtQyY.jpg");
 //        imgURLs.add("https://i.redd.it/9bf67ygj710z.jpg");
