@@ -1,6 +1,7 @@
 package com.example.instagramclone.Profile;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -39,6 +40,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
         setupSettingsList();
 
         setupFragment();
+        getIncomingIntent();
 
         //  Setup back arrow for navigating back to ProfileActivity
         ImageView backArrow = findViewById(R.id.backArrow);
@@ -49,6 +51,16 @@ public class AccountSettingsActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private void getIncomingIntent(){
+        Intent intent = getIntent();
+
+        if(intent.hasExtra(getString(R.string.calling_activity))){
+            Log.d(TAG, "getIncomingIntent: recieved from incoming intent from "+getString(R.string.profile_activity));
+
+            setViewPager(pagerAdapter.getFragmentNumber(getString(R.string.edit_profile_fragment)));
+        }
     }
 
     private void setupFragment(){
