@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.instagramclone.Models.User;
 import com.example.instagramclone.Models.UserAccountSettings;
 import com.example.instagramclone.Models.UserSettings;
 import com.example.instagramclone.R;
@@ -35,6 +36,7 @@ public class EditProfileFragment extends Fragment {
     private EditText mName , mUsername , mWebsite , mDescription , mEmailAddress , mPhoneNumber;
     private CircleImageView mProfilePhoto;
     private FirebaseMethods firebaseMethods;
+    private String userId;
 
     //firebase
     private FirebaseAuth mAuth;
@@ -72,16 +74,46 @@ public class EditProfileFragment extends Fragment {
         return view;
     }
 
-    private void initImageLoader(){
-        UniversalImageLoader universalImageLoader = new UniversalImageLoader(getActivity());
-        ImageLoader.getInstance().init(universalImageLoader.getConfig());
-    }
+    /**
+     *  Retrieve the data contained in the widgets and submits it to the database
+     *  Before doing so it checks to make sure the username chosen is unique
+     */
+    private void saveProfileSettings(){
+        final String displayName = mName.getText().toString();
+        final String username = mUsername.getText().toString();
+        final String website = mWebsite.getText().toString();
+        final String description = mDescription.getText().toString();
+        final String email = mEmailAddress.getText().toString();
+        final long phoneNumber = Long.parseLong(mPhoneNumber.getText().toString());
 
-//    private void setProfileImage(){
-//        Log.d(TAG, "setProfileImage: setting profile image");
-//        String imageURL = "www.cricbuzz.com/a/img/v1/152x152/i1/c170661/virat-kohli.jpg";
-//        UniversalImageLoader.setImage(imageURL , mProfileImage , null , "https://");
-//    }
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User user = new User();
+                for(DataSnapshot ds : dataSnapshot.child(getString(R.string.dbname_users)).getChildren()){
+                    if(ds.getKey().equals(userId)){
+                        user.setUsername(ds.getValue(User.class).getUsername());
+                    }
+                }
+
+                Log.d(TAG, "onDataChange: CURRENT USERNAME "+user.getUsername());
+                //  Case 1 : user didnot change their user name
+                if(user.getUsername().equals(username)){
+
+                } else{
+                    //  Case 2 : user change their user name so we need to check for uniqueness
+
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 
     private void setProfileWidgets(UserSettings userSettings){
         Log.d(TAG, "setProfileWidgets: setting widgets with data retrieved from firebase " + userSettings.toString());
@@ -113,6 +145,7 @@ public class EditProfileFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
         myRef = firebaseDatabase.getReference();
+        userId = mAuth.getCurrentUser().getUid();
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
