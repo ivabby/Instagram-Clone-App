@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +41,7 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference myRef;
     private String append = "";
+    private LinearLayout linearLayout;
 
     //  firebase
     private FirebaseAuth mAuth;
@@ -71,6 +73,7 @@ public class RegisterActivity extends AppCompatActivity {
                 if(checkInput(email , username , password)){
                     mProgressBar.setVisibility(View.VISIBLE);
                     loadingPleaseWait.setVisibility(View.VISIBLE);
+                    linearLayout.setVisibility(View.INVISIBLE);
 
                     firebaseMethods.registerNewEmail(email , password , username);
                 }
@@ -100,6 +103,7 @@ public class RegisterActivity extends AppCompatActivity {
         mPassword = findViewById(R.id.input_password);
         mUsername = findViewById(R.id.input_username);
         btnRegister = findViewById(R.id.btn_register);
+        linearLayout = findViewById(R.id.linearLayout);
         mContext = RegisterActivity.this;
 
         mProgressBar.setVisibility(View.GONE);

@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.instagramclone.Dialogs.ConfirmPasswordDialog;
 import com.example.instagramclone.Models.User;
 import com.example.instagramclone.Models.UserAccountSettings;
 import com.example.instagramclone.Models.UserSettings;
@@ -90,7 +91,7 @@ public class EditProfileFragment extends Fragment {
 
     /**
      *  Retrieve the data contained in the widgets and submits it to the database
-     *  Before doing so it checks to make sure the username chosen is unique
+     *  Before doing so it checks to make sure the username chosen is unique and check for the email also
      */
     private void saveProfileSettings(){
         final String displayName = mName.getText().toString();
@@ -100,29 +101,31 @@ public class EditProfileFragment extends Fragment {
         final String email = mEmailAddress.getText().toString();
         final long phoneNumber = Long.parseLong(mPhoneNumber.getText().toString());
 
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                //  Case 1 : user change their user name so check for uniqueness
-                if(!mUserSettings.getUser().getUsername().equals(username)){
+        //  Case 1 : user change their user name so check for uniqueness
+        if(!mUserSettings.getUser().getUsername().equals(username)){
 
-                    checkIfUsernameExist(username);
+            checkIfUsernameExist(username);
 
 
-                } else{
-                    //  Case 2 : user didnot change their user name
+        }
 
-                }
+        //  Case 2 : if user made a change to their email
+        if(!mUserSettings.getUser().getEmail().equals(email)){
+
+            //  Step 1 : Reauthenticate
+            //  Confirm the password and email
+            ConfirmPasswordDialog dialog = new ConfirmPasswordDialog();
+            dialog.show(getFragmentManager() , getString(R.string.confirm_password_dialog));
+
+            //  Step 2 : check if the email is already registered
+            //  fetchProvidersEmail(String email)
 
 
-            }
+            //  Step 3 : change the email
+            //  Submit the new email to firebase authentication
+        }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
     }
 
 

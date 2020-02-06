@@ -7,7 +7,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressBar mProgressBar;
     private EditText mEmail , mPassword;
     private TextView mPleaseWait;
+    private LinearLayout mLinearLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
         mPleaseWait = findViewById(R.id.pleaseWait);
         mEmail = findViewById(R.id.input_email);
         mPassword = findViewById(R.id.input_password);
+        mLinearLayout = findViewById(R.id.linearLayout);
         mContext = LoginActivity.this;
 
         Log.d(TAG, "onCreate: started");
@@ -101,6 +105,7 @@ public class LoginActivity extends AppCompatActivity {
                 } else{
                     mProgressBar.setVisibility(View.VISIBLE);
                     mPleaseWait.setVisibility(View.VISIBLE);
+                    mLinearLayout.setVisibility(View.INVISIBLE);
 
                     mAuth.signInWithEmailAndPassword(email, password)
                             .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
@@ -145,7 +150,7 @@ public class LoginActivity extends AppCompatActivity {
                                         Log.d(TAG, "signInWithEmail:failure", task.getException());
                                         Toast.makeText(mContext, "Authentication failed.",
                                                 Toast.LENGTH_SHORT).show();
-
+                                        mLinearLayout.setVisibility(View.VISIBLE);
                                         mProgressBar.setVisibility(View.GONE);
                                         mPleaseWait.setVisibility(View.GONE);
 //                                        updateUI(null);
