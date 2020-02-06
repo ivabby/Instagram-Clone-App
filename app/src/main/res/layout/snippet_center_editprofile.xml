@@ -36,7 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/changeProfilePhoto"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="18dp"
                 android:background="@drawable/grey_border_bottom"
                 android:id="@+id/relativeLayout1"
                 android:orientation="vertical">
@@ -66,7 +66,7 @@
                 android:background="@drawable/grey_border_bottom"
                 android:id="@+id/relativeLayout2"
                 android:orientation="vertical"
-                android:layout_marginTop="8dp">
+                android:layout_marginTop="18dp">
 
 
                 <TextView
@@ -94,7 +94,7 @@
                 android:layout_below="@id/relativeLayout2"
                 android:background="@drawable/grey_border_bottom"
                 android:id="@+id/relativeLayout3"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="18dp"
                 >
 
 
@@ -121,7 +121,7 @@
                 android:layout_below="@id/relativeLayout3"
                 android:background="@drawable/grey_border_bottom"
                 android:id="@+id/relativeLayout4"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="18dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -144,10 +144,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="15sp"
+                android:textSize="20sp"
                 android:text="Profile Information"
                 android:layout_below="@id/relativeLayout4"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="20dp"
                 android:textColor="@color/black"
                 android:id="@+id/textPrivateInformation"/>
 
@@ -160,7 +160,7 @@
                 android:layout_below="@id/textPrivateInformation"
                 android:background="@drawable/grey_border_bottom"
                 android:id="@+id/relativeLayout5"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="18dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -187,7 +187,7 @@
                 android:layout_below="@id/relativeLayout5"
                 android:background="@drawable/grey_border_bottom"
                 android:id="@+id/relativeLayout6"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="18dp">
 
                 <TextView
                     android:layout_width="wrap_content"
