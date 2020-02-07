@@ -74,6 +74,46 @@ public class FirebaseMethods {
                 .setValue(email);
     }
 
+    /**
+     * update userAccountSettings
+     * @param displayName
+     * @param website
+     * @param description
+     * @param phoneNumber
+     */
+    public void updateUserAccountSettings(String displayName , String website,String description,long phoneNumber){
+        Log.d(TAG, "updateUserAccountSettings: updating user account settings");
+
+        if(displayName != null) {
+            myRef.child(mContext.getString(R.string.dbname_user_account_settings))
+                    .child(userId)
+                    .child(mContext.getString(R.string.field_displayname))
+                    .setValue(displayName);
+        }
+
+        if(website != null) {
+            myRef.child(mContext.getString(R.string.dbname_user_account_settings))
+                    .child(userId)
+                    .child(mContext.getString(R.string.field_website))
+                    .setValue(website);
+        }
+
+        if(description != null) {
+            myRef.child(mContext.getString(R.string.dbname_user_account_settings))
+                    .child(userId)
+                    .child(mContext.getString(R.string.field_description))
+                    .setValue(description);
+        }
+
+        if(phoneNumber != 0) {
+            myRef.child(mContext.getString(R.string.dbname_users))
+                    .child(userId)
+                    .child(mContext.getString(R.string.field_phonenumber))
+                    .setValue(phoneNumber);
+        }
+
+    }
+
 //    public boolean checkIfUsernameExists(String username , DataSnapshot dataSnapshot){
 //        Log.d(TAG, "checkIfUsernameExists: checking if " + username +" already exists.");
 //

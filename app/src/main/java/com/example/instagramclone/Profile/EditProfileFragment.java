@@ -198,6 +198,25 @@ public class EditProfileFragment extends Fragment implements ConfirmPasswordDial
             //  Submit the new email to firebase authentication
         }
 
+        if(!mUserSettings.getUserAccountSettings().getDisplay_name().equals(displayName)){
+            //  update display name
+            firebaseMethods.updateUserAccountSettings(displayName , null , null , 0);
+        }
+
+        if(!mUserSettings.getUserAccountSettings().getWebsite().equals(website)){
+            //  update website
+            firebaseMethods.updateUserAccountSettings(null ,website , null , 0);
+        }
+
+        if(!mUserSettings.getUserAccountSettings().getDescription().equals(description)){
+            //  update description
+            firebaseMethods.updateUserAccountSettings(null, null,description,0);
+        }
+        if(mUserSettings.getUser().getPhone_number() != phoneNumber){
+            //  update phonenumber
+            firebaseMethods.updateUserAccountSettings(null,null,null,phoneNumber);
+        }
+
     }
 
 
