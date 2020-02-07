@@ -20,8 +20,13 @@ import com.example.instagramclone.Models.UserSettings;
 import com.example.instagramclone.R;
 import com.example.instagramclone.Utils.FirebaseMethods;
 import com.example.instagramclone.Utils.UniversalImageLoader;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,7 +37,73 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class EditProfileFragment extends Fragment {
+public class EditProfileFragment extends Fragment implements ConfirmPasswordDialog.OnConfirmPasswordListener{
+
+    @Override
+    public void onConfirmPassword(String password) {
+        Log.d(TAG, "onConfirmPassword: password captured is "+password);
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        // Get auth credentials from the user for re-authentication. The example below shows
+        // email and password credentials but there are multiple possible providers,
+        // such as GoogleAuthProvider or FacebookAuthProvider.
+                AuthCredential credential = EmailAuthProvider
+                        .getCredential(mAuth.getCurrentUser().getEmail(), password);
+
+        // Prompt the user to re-provide their sign-in credentials
+                user.reauthenticate(credential)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if(task.isSuccessful()){
+
+                                    Log.d(TAG, "User re-authenticated.");
+
+                                    //  If email is already not present in database
+                                    mAuth.fetchSignInMethodsForEmail(mEmailAddress.getText().toString()).addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<SignInMethodQueryResult> tasks) {
+                                            if(tasks.isSuccessful()){
+                                                try {
+                                                    Log.d(TAG, "onComplete: " + tasks.toString() + " " + tasks.getResult().getSignInMethods().size());
+                                                    if (tasks.getResult().getSignInMethods().size() > 0) {
+                                                        Log.d(TAG, "onComplete: that email is already in use");
+                                                        Toast.makeText(getActivity(), "That email is already in use", Toast.LENGTH_SHORT).show();
+                                                    } else {
+                                                        Log.d(TAG, "onComplete: that email is available");
+
+                                                        //  Email available update it
+                                                        mAuth.getCurrentUser().updateEmail(mEmailAddress.getText().toString())
+                                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                    @Override
+                                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                                        if (task.isSuccessful()) {
+                                                                            Log.d(TAG, "User email address updated.");
+                                                                            firebaseMethods.updateEmail(mEmailAddress.getText().toString());
+                                                                            Toast.makeText(getActivity(), "Email Updated", Toast.LENGTH_SHORT).show();
+
+                                                                        }
+                                                                    }
+                                                                });
+                                                    }
+
+                                                } catch (Exception e){
+                                                    Log.e(TAG, "onComplete: NULLPOINTEREXCEPTION " + e.getMessage() );
+                                                }
+                                            }
+                                            else{
+
+                                            }
+                                        }
+                                    });
+                                }
+                                else{
+                                    Log.d(TAG, "re-authentication failed.");
+                                }
+                            }
+                        });
+    }
 
     private static final String TAG = "EditProfileFragment";
     private ImageView mProfileImage;
@@ -117,6 +188,7 @@ public class EditProfileFragment extends Fragment {
             //  Confirm the password and email
             ConfirmPasswordDialog dialog = new ConfirmPasswordDialog();
             dialog.show(getFragmentManager() , getString(R.string.confirm_password_dialog));
+            dialog.setTargetFragment(EditProfileFragment.this , 1);
 
             //  Step 2 : check if the email is already registered
             //  fetchProvidersEmail(String email)
