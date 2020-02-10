@@ -22,4 +22,10 @@
 
 <!--    Activity names-->
     <string name="profile_activity">Profile Activity</string>
+
+
+<!--    String sections-->
+    <string name="gallery">GALLERY</string>
+    <string name="photo">PHOTO</string>
+    <string name="open_camera">OPEN CAMERA</string>
 </resources>

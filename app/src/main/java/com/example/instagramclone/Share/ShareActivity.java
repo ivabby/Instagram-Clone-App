@@ -10,36 +10,61 @@ import android.view.MenuItem;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.viewpager.widget.ViewPager;
 
 import com.example.instagramclone.R;
 import com.example.instagramclone.Utils.BottomNavigationViewHelper;
 import com.example.instagramclone.Utils.Permissions;
+import com.example.instagramclone.Utils.SectionsPagerAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.tabs.TabLayout;
 
 public class ShareActivity extends AppCompatActivity {
     private static final String TAG = "ShareActivity";
     private Context mContext = ShareActivity.this;
     private static final int ACTIVITY_NUM = 2;
     private static final int VERIFY_PERMISSIONS = 1;
-
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_share);
 
         Log.d(TAG , "onCreate started");
 
         if(checkPermissionsArray(Permissions.PERMISSION)){
-
+            setupViewPager();
         } else {
             verifyPermissions(Permissions.PERMISSION);
         }
 
 
+        setupViewPager();
 //        setupBottomNavigationView();
     }
 
+    public void setupViewPager(){
+        SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new GalleryFragment());
+        adapter.addFragment(new PhotoFragment());
+
+        viewPager = findViewById(R.id.container);
+        viewPager.setAdapter(adapter);
+
+        TabLayout tabLayout = findViewById(R.id.tabsBottom);
+        tabLayout.setupWithViewPager(viewPager);
+
+        tabLayout.getTabAt(0).setText(getString(R.string.gallery));
+        tabLayout.getTabAt(1).setText(getString(R.string.photo));
+    }
+
+
+
+    /**
+     * Verify all the permissions passed
+     * @param permission
+     */
     private void verifyPermissions(String[] permission) {
         Log.d(TAG, "verifyPermissions: verifying permissions");
         ActivityCompat.requestPermissions(
