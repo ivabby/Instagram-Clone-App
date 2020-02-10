@@ -1,6 +1,7 @@
 package com.example.instagramclone.Share;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +13,12 @@ import androidx.fragment.app.Fragment;
 import com.example.instagramclone.R;
 
 public class GalleryFragment extends Fragment {
+    private static final String TAG = "GalleryFragment";
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView: started");
         View view = inflater.inflate(R.layout.fragment_gallery , container , false);
 
         return view;
