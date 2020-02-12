@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //  Check if current user is logged in or not
         checkCurrentUser(FirebaseAuth.getInstance().getCurrentUser());
 
         setContentView(R.layout.activity_main);
@@ -75,6 +76,9 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_camera);
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_instagram);
         tabLayout.getTabAt(2).setIcon(R.drawable.ic_arrow);
+
+        //  Opens the home tab when activity starts
+        viewPager.setCurrentItem(1 , true);
     }
 
 
