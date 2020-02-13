@@ -1,5 +1,6 @@
 package com.example.instagramclone.Share;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
@@ -41,6 +42,7 @@ public class GalleryFragment extends Fragment {
     //  vars
     private ArrayList<String> directories;
     private String mAppend = "file:/";
+    private String mSelectedImage;
 
     //  Constants
     private static final int NUM_GRID_COLUMN = 3;
@@ -74,6 +76,9 @@ public class GalleryFragment extends Fragment {
             public void onClick(View v) {
                 Log.d(TAG, "onClick: navigating to next screen. ");
 
+                Intent intent = new Intent(getActivity() , NextActivity.class);
+                intent.putExtra(getString(R.string.selected_image) , mSelectedImage);
+                startActivity(intent);
             }
         });
 
@@ -90,11 +95,17 @@ public class GalleryFragment extends Fragment {
         if(FileSearch.getDirectoryPath(filePaths.PICTURES) != null){
             directories = FileSearch.getDirectoryPath(filePaths.PICTURES);
         }
+        ArrayList<String> directoryName = new ArrayList<>();
+        for(int i=0;i<directories.size();i++)
+        {
+            int index = directories.get(i).lastIndexOf('/');
+            directoryName.add(directories.get(i).substring(index+1));
+        }
 
         directories.add(filePaths.CAMERA);
 
         ArrayAdapter<String> adapter =  new ArrayAdapter<>(getActivity(),
-                            android.R.layout.simple_spinner_item , directories);
+                            android.R.layout.simple_spinner_item , directoryName);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
@@ -130,12 +141,14 @@ public class GalleryFragment extends Fragment {
 
         // set the first image to be displayed when the activity fragment view is inflated
         setImage(imageURLs.get(0) , galleryImage , mAppend);
+        mSelectedImage = imageURLs.get(0);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d(TAG, "onItemClick: selected image ");
                 setImage(imageURLs.get(position) , galleryImage , mAppend);
+                mSelectedImage = imageURLs.get(position);
             }
         });
     }
