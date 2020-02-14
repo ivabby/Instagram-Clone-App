@@ -4,14 +4,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.instagramclone.R;
+import com.example.instagramclone.Utils.FirebaseMethods;
 import com.example.instagramclone.Utils.UniversalImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,9 +32,15 @@ public class NextActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference myRef;
+    private FirebaseMethods mFirebaseMethods;
 
     //  vars
     private String mAppend = "file:/";
+    private int imageCount = 0;
+    private String imgURL;
+
+    //  Widgets
+    private EditText mCaption;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,6 +48,8 @@ public class NextActivity extends AppCompatActivity {
         setContentView(R.layout.activity_next);
         Log.d(TAG, "onCreate: started. ");
 
+        mFirebaseMethods = new FirebaseMethods(NextActivity.this);
+        mCaption = findViewById(R.id.caption);
 
         setupFirebaseAuth();
 
@@ -57,7 +68,13 @@ public class NextActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //  Share the photo and save on database
+                Log.d(TAG, "onClick: navigating to final share screen");
 
+                //  Upload the image to firebase
+                Toast.makeText(NextActivity.this , "Attempting to upload new photo",Toast.LENGTH_SHORT).show();
+
+                String caption = mCaption.getText().toString();
+                mFirebaseMethods.uploadNewPhoto(getString(R.string.new_photo) , caption , imageCount , imgURL);
             }
         });
         setImage();
@@ -79,6 +96,8 @@ public class NextActivity extends AppCompatActivity {
          *
          *
          */
+
+
 
     }
 
@@ -106,6 +125,9 @@ public class NextActivity extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
         myRef = firebaseDatabase.getReference();
 
+
+        Log.d(TAG, "Image count " + imageCount);
+
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -125,10 +147,10 @@ public class NextActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                //  retrieve user information from database
-//                setProfileWidgets(firebaseMethods.getUserSettings(dataSnapshot));
+                imageCount = mFirebaseMethods.getImageCount(dataSnapshot);
 
-                //  retrieve user images in gridview
+                Log.d(TAG, "onDataChange: image count " + imageCount);
+
 
             }
 

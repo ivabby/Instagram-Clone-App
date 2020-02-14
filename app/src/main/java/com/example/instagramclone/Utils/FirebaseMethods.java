@@ -18,6 +18,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class FirebaseMethods {
     private static final String TAG = "FirebaseMethods";
@@ -32,11 +34,15 @@ public class FirebaseMethods {
     private DatabaseReference myRef;
 
     private String userId;
+    private StorageReference mStorageReference;
+
+
     public FirebaseMethods(Context context){
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         myRef = mFirebaseDatabase.getReference();
         mContext = context;
+        mStorageReference = FirebaseStorage.getInstance().getReference();
 
         if(mAuth.getCurrentUser() != null){
             userId = mAuth.getCurrentUser().getUid();
@@ -307,6 +313,49 @@ public class FirebaseMethods {
         }
 
         return new UserSettings(user , settings);
+    }
+
+    public int getImageCount(DataSnapshot dataSnapshot){
+        int count = 0;
+
+        if(!dataSnapshot.child(mContext.getString(R.string.dbname_user_photos)).exists())
+            return 0;
+
+        if(!dataSnapshot.child(mContext.getString(R.string.dbname_user_photos)).child(userId).exists())
+            return 0;
+
+        for(DataSnapshot ds : dataSnapshot
+                .child(mContext.getString(R.string.dbname_user_photos))
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .getChildren()){
+            count+=1;
+        }
+
+        return count;
+    }
+
+    public void uploadNewPhoto(String photoType , String caption , int count , String imgURL){
+        Log.d(TAG, "uploadNewPhoto: attempting to upload new photo");
+
+        FilePaths filePaths = new FilePaths();
+
+        //  case 1) new photo
+        if(photoType.equals(mContext.getString(R.string.new_photo))){
+            Log.d(TAG, "uploadNewPhoto: uploading new photo");
+
+            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+            StorageReference storageReference = mStorageReference
+                    .child(filePaths.FIREBASE_IMAGE_STORAGE + "/" + userId + "/photo" + (count+1));
+
+            
+        }
+
+        //  case 2) profile photo
+        else if(photoType.equals(mContext.getString(R.string.profile_photo))){
+            Log.d(TAG, "uploadNewPhoto: uploading new profile photo");
+
+        }
     }
 }
 
