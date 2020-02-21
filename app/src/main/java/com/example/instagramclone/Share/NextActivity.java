@@ -1,5 +1,6 @@
 package com.example.instagramclone.Share;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -42,6 +43,8 @@ public class NextActivity extends AppCompatActivity {
     //  Widgets
     private EditText mCaption;
 
+    private Context mContext;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +53,7 @@ public class NextActivity extends AppCompatActivity {
 
         mFirebaseMethods = new FirebaseMethods(NextActivity.this);
         mCaption = findViewById(R.id.caption);
+        mContext = this;
 
         setupFirebaseAuth();
 
@@ -71,7 +75,7 @@ public class NextActivity extends AppCompatActivity {
                 Log.d(TAG, "onClick: navigating to final share screen");
 
                 //  Upload the image to firebase
-                Toast.makeText(NextActivity.this , "Attempting to upload new photo",Toast.LENGTH_SHORT).show();
+                Toast.makeText(NextActivity.this , "Attempting to upload new photo " + imageCount,Toast.LENGTH_SHORT).show();
 
                 String caption = mCaption.getText().toString();
                 mFirebaseMethods.uploadNewPhoto(getString(R.string.new_photo) , caption , imageCount , imgURL);
@@ -148,7 +152,10 @@ public class NextActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                imageCount = mFirebaseMethods.getImageCount(dataSnapshot);
+//                imageCount = mFirebaseMethods.getImageCount(dataSnapshot);
+
+                imageCount = (int) dataSnapshot.child(mContext.getString(R.string.dbname_user_photos))
+                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).getChildrenCount();
 
                 Log.d(TAG, "onDataChange: image count " + imageCount);
 
@@ -160,5 +167,20 @@ public class NextActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mAuthListener != null){
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
     }
 }

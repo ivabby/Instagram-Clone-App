@@ -14,6 +14,30 @@ public class Photo {
 
     public Photo(){}
 
+    public void setCaption(String caption) {
+        this.caption = caption;
+    }
+
+    public void setDate_created(String date_created) {
+        this.date_created = date_created;
+    }
+
+    public void setImage_path(String image_path) {
+        this.image_path = image_path;
+    }
+
+    public void setPhoto_id(String photo_id) {
+        this.photo_id = photo_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
     public String getCaption() {
         return caption;
     }

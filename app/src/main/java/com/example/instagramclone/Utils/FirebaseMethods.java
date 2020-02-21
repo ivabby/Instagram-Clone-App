@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.instagramclone.Models.Photo;
 import com.example.instagramclone.Models.User;
 import com.example.instagramclone.Models.UserAccountSettings;
 import com.example.instagramclone.Models.UserSettings;
@@ -26,6 +27,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class FirebaseMethods {
     private static final String TAG = "FirebaseMethods";
@@ -327,11 +333,11 @@ public class FirebaseMethods {
     public int getImageCount(DataSnapshot dataSnapshot){
         int count = 0;
 
-        if(!dataSnapshot.child(mContext.getString(R.string.dbname_user_photos)).exists())
-            return 0;
-
-        if(!dataSnapshot.child(mContext.getString(R.string.dbname_user_photos)).child(userId).exists())
-            return 0;
+//        if(!dataSnapshot.child(mContext.getString(R.string.dbname_user_photos)).exists())
+//            return 0;
+//
+//        if(!dataSnapshot.child(mContext.getString(R.string.dbname_user_photos)).child(userId).exists())
+//            return 0;
 
         for(DataSnapshot ds : dataSnapshot
                 .child(mContext.getString(R.string.dbname_user_photos))
@@ -343,7 +349,7 @@ public class FirebaseMethods {
         return count;
     }
 
-    public void uploadNewPhoto(String photoType , String caption , int count , String imgURL){
+    public void uploadNewPhoto(String photoType , final String caption ,final int count , String imgURL){
         Log.d(TAG, "uploadNewPhoto: attempting to upload new photo");
 
         FilePaths filePaths = new FilePaths();
@@ -367,13 +373,13 @@ public class FirebaseMethods {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-//                    Uri firebaseUrl = taskSnapshot.getDownloadUrl();
+                    Uri firebaseUrl = taskSnapshot.getUploadSessionUri();
 
                     Toast.makeText(mContext , "photo upload success" , Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, "onSuccess: upload success ");
+                    Log.d(TAG, "onSuccess: upload success " + firebaseUrl);
 
                     //  Add the new photo to 'photo' node and 'user_photo' node
-
+                    addPhotoToDatabase(caption , firebaseUrl.toString());
 
                     //  navigate to the main feed so the user can see their photo
 
@@ -408,6 +414,35 @@ public class FirebaseMethods {
             Log.d(TAG, "uploadNewPhoto: uploading new profile photo");
 
         }
+    }
+
+    private String getTimeStamp(){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'" , Locale.CANADA);
+        sdf.setTimeZone(TimeZone.getTimeZone("Canada/Pacific"));
+        return sdf.format(new Date());
+    }
+
+    private void addPhotoToDatabase(String caption,String url){
+        Log.d(TAG, "addPhotoToDatabase: adding photo to database.");
+
+        String newPhotoKey = myRef.child(mContext.getString(R.string.dbname_photos)).push().getKey();
+
+        String tags = StringManipulation.getTags(caption);
+
+        Photo photo = new Photo();
+        photo.setCaption(caption);
+        photo.setDate_created(getTimeStamp());
+        photo.setImage_path(url);
+        photo.setTags(tags);
+        photo.setUser_id(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        photo.setPhoto_id(newPhotoKey);
+
+        //  insert into database
+        myRef.child(mContext.getString(R.string.dbname_user_photos))
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(newPhotoKey).setValue(photo);
+
+        myRef.child(mContext.getString(R.string.dbname_photos)).child(newPhotoKey).setValue(photo);
     }
 }
 
