@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.instagramclone.Profile.AccountSettingsActivity;
 import com.example.instagramclone.R;
 import com.example.instagramclone.Utils.FilePaths;
 import com.example.instagramclone.Utils.FileSearch;
@@ -76,14 +77,28 @@ public class GalleryFragment extends Fragment {
             public void onClick(View v) {
                 Log.d(TAG, "onClick: navigating to next screen. ");
 
-                Intent intent = new Intent(getActivity() , NextActivity.class);
-                intent.putExtra(getString(R.string.selected_image) , mSelectedImage);
-                startActivity(intent);
+                if(isRootTask()) {
+                    Intent intent = new Intent(getActivity(), NextActivity.class);
+                    intent.putExtra(getString(R.string.selected_image), mSelectedImage);
+                    startActivity(intent);
+                }
+                 else{
+                     Intent intent = new Intent(getActivity() , AccountSettingsActivity.class);
+                     intent.putExtra(getString(R.string.selected_image) , mSelectedImage);
+                     intent.putExtra(getString(R.string.return_to_fragment) , getString(R.string.edit_profile_fragment));
+                     startActivity(intent);
+                }
             }
         });
 
         init();
         return view;
+    }
+
+    private boolean isRootTask(){
+        if(((ShareActivity)getActivity()).getTask() == 0)
+            return true;
+        return false;
     }
 
     private void init(){

@@ -1,5 +1,6 @@
 package com.example.instagramclone.Profile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,6 +20,7 @@ import com.example.instagramclone.Models.User;
 import com.example.instagramclone.Models.UserAccountSettings;
 import com.example.instagramclone.Models.UserSettings;
 import com.example.instagramclone.R;
+import com.example.instagramclone.Share.ShareActivity;
 import com.example.instagramclone.Utils.FirebaseMethods;
 import com.example.instagramclone.Utils.UniversalImageLoader;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -111,6 +114,7 @@ public class EditProfileFragment extends Fragment implements ConfirmPasswordDial
     private CircleImageView mProfilePhoto;
     private FirebaseMethods firebaseMethods;
     private String userId;
+    private TextView mChangeProfilePhoto;
 
     //  vars
     private UserSettings mUserSettings;
@@ -133,6 +137,7 @@ public class EditProfileFragment extends Fragment implements ConfirmPasswordDial
         mEmailAddress = view.findViewById(R.id.mail);
         mPhoneNumber = view.findViewById(R.id.phoneNumber);
         firebaseMethods = new FirebaseMethods(getActivity());
+        mChangeProfilePhoto = view.findViewById(R.id.changeProfilePhoto);
 
         setupFirebaseAuth();
 //        initImageLoader();
@@ -272,6 +277,16 @@ public class EditProfileFragment extends Fragment implements ConfirmPasswordDial
         mEmailAddress.setText(userSettings.getUser().getEmail());
         mPhoneNumber.setText(String.valueOf(userSettings.getUser().getPhone_number()));
 
+        mChangeProfilePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: changing profile photo.");
+
+                Intent intent = new Intent(getActivity() , ShareActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //268435456
+                getActivity().startActivity(intent);
+            }
+        });
     }
 
 

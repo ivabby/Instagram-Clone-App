@@ -1,6 +1,7 @@
 package com.example.instagramclone.Utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
@@ -8,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.instagramclone.Home.MainActivity;
 import com.example.instagramclone.Models.Photo;
 import com.example.instagramclone.Models.User;
 import com.example.instagramclone.Models.UserAccountSettings;
@@ -135,24 +137,6 @@ public class FirebaseMethods {
 
     }
 
-//    public boolean checkIfUsernameExists(String username , DataSnapshot dataSnapshot){
-//        Log.d(TAG, "checkIfUsernameExists: checking if " + username +" already exists.");
-//
-//        User user = new User();
-//        for(DataSnapshot ds : dataSnapshot.child(userId).getChildren()){
-//            Log.d(TAG, "checkIfUsernameExists: datasnapshot " + ds);
-//
-//            user.setUsername(ds.getValue(User.class).getUsername());
-//            Log.d(TAG, "checkIfUsernameExists: username " + user.getUsername());
-//
-//            if(StringManipulation.expandUsername(user.getUsername()).equals(username)){
-//                Log.d(TAG, "checkIfUsernameExists: FOUND A MATCH: " + username);
-//                return true;
-//            }
-//        }
-//
-//        return  false;
-//    }
 
 
 
@@ -382,6 +366,9 @@ public class FirebaseMethods {
                     addPhotoToDatabase(caption , firebaseUrl.toString());
 
                     //  navigate to the main feed so the user can see their photo
+                    Intent intent = new Intent(mContext , MainActivity.class);
+
+                    mContext.startActivity(intent);
 
 
                 }
@@ -413,7 +400,61 @@ public class FirebaseMethods {
         else if(photoType.equals(mContext.getString(R.string.profile_photo))){
             Log.d(TAG, "uploadNewPhoto: uploading new profile photo");
 
+            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+            StorageReference storageReference = mStorageReference
+                    .child(filePaths.FIREBASE_IMAGE_STORAGE + "/" + userId + "/profile_photo");
+
+            //  Convert image to bitmap
+            Bitmap bm = ImageManager.getBitamp(imgURL);
+            byte[] bytes = ImageManager.getBytesFromBitmap(bm , 100);
+
+            UploadTask uploadTask = null;
+            uploadTask = storageReference.putBytes(bytes);
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                    Uri firebaseUrl = taskSnapshot.getUploadSessionUri();
+
+                    Toast.makeText(mContext , "photo upload success" , Toast.LENGTH_SHORT).show();
+
+                    //  insert into 'user_account_settings' node
+
+                    setProfilePhoto(firebaseUrl.toString());
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d(TAG, "onFailure: photo upload failed");
+
+                    Toast.makeText(mContext , "photo upload failed" , Toast.LENGTH_SHORT).show();
+
+                }
+            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+                    double progress = (100 * taskSnapshot.getBytesTransferred())/taskSnapshot.getTotalByteCount();
+
+                    if(progress - 15 > mPhotoUploadProgress){
+                        Toast.makeText(mContext , "photo upload progress: " + String.format("%.0f" , progress) + "%", Toast.LENGTH_SHORT).show();
+                        mPhotoUploadProgress = progress;
+                    }
+
+                    Log.d(TAG, "onProgress: upload progress: " + progress + "% done");
+                }
+            });
         }
+    }
+
+    private void setProfilePhoto(String url){
+        Log.d(TAG, "setProfilePhoto: setting new profile photo. " + url);
+
+        myRef.child(mContext.getString(R.string.dbname_user_account_settings))
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(mContext.getString(R.string.profile_photo))
+                .setValue(url);
     }
 
     private String getTimeStamp(){

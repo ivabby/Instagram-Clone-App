@@ -2,6 +2,7 @@ package com.example.instagramclone.Utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -15,6 +16,8 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+
+import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class UniversalImageLoader {
 
@@ -54,7 +57,10 @@ public class UniversalImageLoader {
     public static void setImage(String imageURL , ImageView image , final ProgressBar mProgressBar , String append){
         ImageLoader imageLoader = ImageLoader.getInstance();
 
-        imageLoader.displayImage(append + imageURL, image, new ImageLoadingListener() {
+        if(append != "")
+            imageURL = append + imageURL;
+
+        imageLoader.displayImage(imageURL, image, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
                 if(mProgressBar != null){
@@ -64,6 +70,7 @@ public class UniversalImageLoader {
 
             @Override
             public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+                Log.d(TAG, "onLoadingFailed: unable to load image " + failReason);
                 if(mProgressBar != null){
                     mProgressBar.setVisibility(View.GONE);
                 }
